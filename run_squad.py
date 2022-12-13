@@ -614,7 +614,7 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
         segment_ids=segment_ids,
         use_one_hot_embeddings=use_one_hot_embeddings)
 
-    tvars = tf.trainable_variables()
+    tvars = tf.compat.v1.trainable_variables()
 
     initialized_variable_names = {}
     scaffold_fn = None
@@ -624,12 +624,12 @@ def model_fn_builder(bert_config, init_checkpoint, learning_rate,
       if use_tpu:
 
         def tpu_scaffold():
-          tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
-          return tf.train.Scaffold()
+          tf.compat.v1.train.init_from_checkpoint(init_checkpoint, assignment_map)
+          return tf.compat.v1.train.Scaffold()
 
         scaffold_fn = tpu_scaffold
       else:
-        tf.train.init_from_checkpoint(init_checkpoint, assignment_map)
+        tf.compat.v1.train.init_from_checkpoint(init_checkpoint, assignment_map)
 
     tf.compat.v1.logging.info("**** Trainable Variables ****")
     for var in tvars:
