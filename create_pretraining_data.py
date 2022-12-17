@@ -440,7 +440,6 @@ def main(_):
       vocab_file=FLAGS.vocab_file, do_lower_case=FLAGS.do_lower_case)
 
   input_files = []
-
   for input_pattern in FLAGS.input_file.split(","):
     input_files.extend(tf.compat.v1.gfile.Glob(input_pattern))
 
@@ -454,22 +453,10 @@ def main(_):
       FLAGS.short_seq_prob, FLAGS.masked_lm_prob, FLAGS.max_predictions_per_seq,
       rng)
 
-  # parse input files as output files
   output_files = FLAGS.output_file.split(",")
-  if len(output_files) != len(input_files):
-    tf.compat.v1.logging.info("*** Parsing output files for input ***")
-    output_files =[]
-    output_base = FLAGS.output_file.split(",")[0]
-    for input_file in input_files:
-      input_name = input_file.split("/")[-1]
-      output_files.append(output_base + input_name.replace(".txt", ".tfrecord"))
-  else:
-    tf.compat.v1.logging.info("*** Writing to output files ***")
-    for output_file in output_files:
-      tf.compat.v1.logging.info("  %s", output_file)
-
-  tf.compat.v1.logging.info(input_files)
-  tf.compat.v1.logging.info(output_files)
+  tf.compat.v1.logging.info("*** Writing to output files ***")
+  for output_file in output_files:
+    tf.compat.v1.logging.info("  %s", output_file)
 
   write_instance_to_example_files(instances, tokenizer, FLAGS.max_seq_length,
                                   FLAGS.max_predictions_per_seq, output_files)
